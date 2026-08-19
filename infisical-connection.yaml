@@ -1,0 +1,6 @@
+apiVersion: secrets.infisical.com/v1beta1
+kind: InfisicalConnection
+metadata:
+  name: mapid-infisical-connection
+spec:
+  address: <mapid-selfhost-infisical-url>
