@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-geoserver-nodejs-rf
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: new-geoserver-nodejs-rf
+  template:
+    metadata:
+      labels:
+        app: new-geoserver-nodejs-rf
+    spec:
+      containers:
+      - name: new-geoserver-nodejs-rf
+        image: 392987323540.dkr.ecr.ap-southeast-3.amazonaws.com/dev-mapid-repository-geoserver-nodejs-refactoring:latest
+        ports:
+        - containerPort: 4006
+        resources:
+          limits:
+            memory: "800Mi"
+          requests:
+            memory: "400Mi"
+        envFrom:
+        - secretRef:
+            name: new-geoserver-nodejs-rf-infisical-secret
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-geoserver-nodejs-rf-service
+spec:
+  selector:
+    app: new-geoserver-nodejs-rf
+  ports:
+  - port: 4006
+    targetPort: 4006
+  type: ClusterIP
