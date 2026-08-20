@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-geoserver-nodejs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: new-geoserver-nodejs
+  template:
+    metadata:
+      labels:
+        app: new-geoserver-nodejs
+    spec:
+      containers:
+      - name: new-geoserver-nodejs
+        image: 392987323540.dkr.ecr.ap-southeast-3.amazonaws.com/dev-mapid-repository-geoserver-nodejs:latest
+        ports:
+        - containerPort: 4004
+        resources:
+          limits:
+            memory: "800Mi"
+          requests:
+            memory: "400Mi"
+        envFrom:
+          - secretRef:
+              name: new-geoserver-nodejs-infisical-secret
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-geoserver-nodejs-service
+spec:
+  selector:
+    app: new-geoserver-nodejs
+  ports:
+  - port: 4004
+    targetPort: 4004
+  type: ClusterIP
