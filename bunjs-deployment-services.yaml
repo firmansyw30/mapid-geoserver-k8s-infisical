@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: new-geoserver-bunjs
+  annotations:
+    secrets.infisical.com/auto-reload: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: new-geoserver-bunjs
+  template:
+    metadata:
+      labels:
+        app: new-geoserver-bunjs
+    spec:
+      containers:
+      - name: new-geoserver-bunjs
+        image: 392987323540.dkr.ecr.ap-southeast-3.amazonaws.com/dev-mapid-repository-geoserver-bunjs:latest
+        ports:
+        - containerPort: 4005
+        resources:
+          limits:
+            memory: "800Mi"
+          requests:
+            memory: "400Mi"
+        envFrom:
+          - secretRef:
+              name: new-geoserver-bunjs-infisical-secret
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-geoserver-bunjs-service
+spec:
+  selector:
+    app: new-geoserver-bunjs
+  ports:
+  - port: 4005
+    targetPort: 4005
+  type: ClusterIP
