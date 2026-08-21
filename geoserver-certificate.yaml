@@ -9,4 +9,4 @@ spec:
     name: letsencrypt-cert
     kind: ClusterIssuer
   dnsNames:
-  - newdevserver.domain.io
+  - newdevserver.mapid.io
