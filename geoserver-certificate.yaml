@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: newdevserver-mapid-cert
+  namespace: default   # adjust with actual service/ingress namespace
+spec:
+  secretName: newdevserver-mapid-tls
+  issuerRef:
+    name: letsencrypt-cert
+    kind: ClusterIssuer
+  dnsNames:
+  - newdevserver.domain.io
