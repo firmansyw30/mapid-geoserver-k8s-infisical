@@ -1,0 +1,212 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: geoserver-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    # (Opsional) Middleware untuk batas body 200MB (harus dibuat terlebih dahulu)
+    # traefik.ingress.kubernetes.io/router.middlewares: default-buffering@kubernetescrd
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: newdevserver.mapid.io
+    http:
+      paths:
+      # ========== ROOT → MAIN (port 4004) ==========
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+
+      # ========== BUN GROUP (port 4005) ==========
+      - path: /auth_bun
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /moneys_bun
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /sini_v2
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /sheets
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /mapid_ai
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /toolbox
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+      - path: /api_admin
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-bunjs-service
+            port:
+              number: 4005
+
+      # ========== MAIN ADDITIONAL PATHS (port 4004) ==========
+      - path: /algoritma_genangan
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /algoritma_cilicis
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /geocode
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /sini
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /data_catalogue
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+
+      # ========== UPLOAD/LAYERS (port 4004) dengan body size besar ==========
+      - path: /upload
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /layers
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+      - path: /layers_new
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service
+            port:
+              number: 4004
+
+      # ========== RF GROUP (port 4006) ==========
+      - path: /mobile
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /admin_mobile
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /events
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /maluku
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /blog_ai
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /basemap
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /gps
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /academy
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-rf-service
+            port:
+              number: 4006
+
+      # ========== SOCKET.IO (sementara ke main, perlu service terpisah) ==========
+      - path: /socket.io/
+        pathType: Prefix
+        backend:
+          service:
+            name: new-geoserver-nodejs-service   # asumsi socket berjalan di aplikasi yang sama
+            port:
+              number: 4004
+
+  tls:
+  - hosts:
+    - newdevserver.mapid.io
+    secretName: newdevserver-mapid-tls   # pastikan secret TLS sudah ada
